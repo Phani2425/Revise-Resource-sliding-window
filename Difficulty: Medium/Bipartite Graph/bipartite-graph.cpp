@@ -1,13 +1,76 @@
 
 // USING BFS
 
+// class Solution {
+    
+//   public:
+//     bool isBipartite(int V, vector<vector<int>> &edges) {
+//       vector<int> adj[V];
+//       vector<int> color(V,-1);
+//       queue<int> q;
+      
+//       //creating adjecency list
+//       for(vector<int> edge :  edges){
+//           adj[edge[0]].push_back(edge[1]);
+//           adj[edge[1]].push_back(edge[0]);
+//       }
+      
+//       q.push(0);
+//       color[0] = 0;
+      
+//       while(!q.empty()){
+//           int node = q.front();
+//           q.pop();
+          
+//           for(int v : adj[node]){
+//               //if neighbour is not yet colored
+//               if(color[v] == -1){
+//                   color[v] = (color[node]+1)%2;
+//                   q.push(v);
+//               }
+//               //if neighbour is already colored
+//               else{
+//                   if(color[v] == color[node]){
+//                       return false;
+//                   }
+//               }
+//           }
+//       }
+      
+//       return true;
+       
+//     }
+// };
+
+
+
+// USING DFS
+
 class Solution {
+    
+    bool dfs(int vertex, bool Mycolor, vector<int> adj[], vector<int>& color){
+        color[vertex] = Mycolor;
+        
+        for(int v  :adj[vertex]){
+          if(color[v] == Mycolor){
+              return false;
+          } 
+          if( color[v] == -1 && !dfs(v,(Mycolor+1)%2,adj,color) ){
+              return false;
+          }
+        }
+        
+        return true;
+    }
+    
     
   public:
     bool isBipartite(int V, vector<vector<int>> &edges) {
       vector<int> adj[V];
+      //although in bfs mu visited array create kari nathili kain na sethi amaku visited array darkar bi nathila kai na ame sabu neighbour vertices check karibara thila
+      //but actually sethi amaku cretae karibara thila ..kain na graph disconnected bi heithai pare na ..setebele visited array hni kama re asiba but point is sethi ame visited jagare color array re bi kama chalei deithante in case of disconnected graph too
+      
       vector<int> color(V,-1);
-      queue<int> q;
       
       //creating adjecency list
       for(vector<int> edge :  edges){
@@ -15,25 +78,9 @@ class Solution {
           adj[edge[1]].push_back(edge[0]);
       }
       
-      q.push(0);
-      color[0] = 0;
-      
-      while(!q.empty()){
-          int node = q.front();
-          q.pop();
-          
-          for(int v : adj[node]){
-              //if neighbour is not yet colored
-              if(color[v] == -1){
-                  color[v] = (color[node]+1)%2;
-                  q.push(v);
-              }
-              //if neighbour is already colored
-              else{
-                  if(color[v] == color[node]){
-                      return false;
-                  }
-              }
+      for(int i = 0;i<color.size();i++){
+          if(color[i] == -1 && !dfs(i,0,adj,color)){
+              return false;
           }
       }
       
@@ -44,7 +91,7 @@ class Solution {
 
 
 
-// THIS BELOW SOLUTION IS CORRECT BUT TAKES LITTLE MORE TIME AND FAILS IN 1111TH TEST CASE
+// THIS BELOW SOLUTION ALSO USING BFS IS CORRECT BUT TAKES LITTLE MORE TIME AND FAILS IN 1111TH TEST CASE WINT TIME LIMIT EXCEED
 
 // class Solution {
     
@@ -108,4 +155,7 @@ class Solution {
 //       return true;
 //     }
 // };
+
+
+
 
